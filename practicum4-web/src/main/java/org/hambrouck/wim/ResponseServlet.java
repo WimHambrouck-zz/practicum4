@@ -1,5 +1,9 @@
 package org.hambrouck.wim;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import sun.rmi.runtime.Log;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,11 +34,22 @@ public class ResponseServlet extends HttpServlet {
         } else {
             response.setContentType("text/html");
             PrintWriter uit = response.getWriter();
-            Map<String, String[]> params = request.getParameterMap();
 
-            for (Map.Entry<String, String[]> pair : params.entrySet()) {
-                uit.println(pair.getKey() + " = " + pair.getValue()[0]);
-            }
+            //post naar token_endpoint om token te krijgen voor Google+ API
+            String urlParameters = "code=" + request.getParameter("code") + "&" +
+                    "client_id=" + Logica.CLIENT_ID + "&" +
+                    "client_secret=" + Logica.CLIENT_SECRET + "&" +
+                    "redirect_uri=" + Logica.REDIRECT_URI + "&" +
+                    "grant_type=authorization_code";
+            JSONObject json = Logica.getJsonFromPost(request.getSession().getAttribute("token_endpoint").toString(), urlParameters);
+            //access_token uit respons halen
+            String access_token = json.get("access_token").toString();
+
+            JSONObject eindelijk = Logica.getJsonFromUrl(Logica.PEOPLE_API_URL + "?access_token=" + access_token);
+
+
+
+            uit.println(eindelijk.getString("displayName"));
         }
 
     }

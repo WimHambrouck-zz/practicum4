@@ -22,6 +22,7 @@ public class Logica {
     public static final String CLIENT_SECRET = "mm-NneMlHBmkxID4-0HcJ_C0";
     public static final String APPLICATION_NAME = "practicum4";
     public static final String REDIRECT_URI = "http://localhost:8080/practicum4-web-1.0-SNAPSHOT/response";
+    public static final String PEOPLE_API_URL = "https://www.googleapis.com/plus/v1/people/me";
 
     /**
      * The OpenID Connect protocol requires the use of multiple endpoints for authenticating users,
@@ -65,6 +66,15 @@ public class Logica {
         }
     }
 
+    private static String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
+
     public static String getStringFromUrl(String url) throws IOException {
         InputStream is = new URL(url).openStream();
         try {
@@ -75,24 +85,12 @@ public class Logica {
         }
     }
 
-    public static String sendPost(String url, HttpServletRequest request) throws IOException {
+    public static JSONObject getJsonFromPost(String url, String urlParameters) throws IOException {
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
         //request header
         con.setRequestMethod("POST");
-
-
-        /*
-        code=4/P7q7W91a-oMsCeLvIaQm6bTrgtp7&
-client_id=8819981768.apps.googleusercontent.com&
-client_secret={client_secret}&
-redirect_uri=https://oauth2-login-demo.example.com/code&
-grant_type=authorization_code
-         */
-        String urlParameters = "code=" + request.getParameter("code") + "&" +
-                "client_id" + Logica.CLIENT_ID + "&" +
-                "client_secret=" + Logica.CLIENT_SECRET;
 
         // Send post request
         con.setDoOutput(true);
@@ -102,9 +100,11 @@ grant_type=authorization_code
         wr.close();
 
         int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + urlParameters);
-        System.out.println("Response Code : " + responseCode);
+
+        if(responseCode != 200)
+        {
+            return new JSONObject("{Fout! Response: " + responseCode + "}");
+        }
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
@@ -116,18 +116,6 @@ grant_type=authorization_code
         }
         in.close();
 
-        //print result
-        return response.toString();
-
+        return new JSONObject(response.toString());
     }
-
-    private static String readAll(Reader rd) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        int cp;
-        while ((cp = rd.read()) != -1) {
-            sb.append((char) cp);
-        }
-        return sb.toString();
-    }
-
 }
