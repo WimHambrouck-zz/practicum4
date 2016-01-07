@@ -45,11 +45,9 @@ public class ResponseServlet extends HttpServlet {
             //access_token uit respons halen
             String access_token = json.get("access_token").toString();
 
-            JSONObject eindelijk = Logica.getJsonFromUrl(Logica.PEOPLE_API_URL + "?access_token=" + access_token);
+            request.getSession().setAttribute("persoon", Logica.getJsonFromUrl(Logica.PEOPLE_API_URL + "?access_token=" + access_token));
 
-
-
-            uit.println(eindelijk.getString("displayName"));
+            response.sendRedirect("aangemeld.jsp");
         }
 
     }
