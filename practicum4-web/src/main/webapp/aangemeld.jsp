@@ -5,6 +5,24 @@
 <%
     JSONObject json = (JSONObject) session.getAttribute("persoon");
     Iterator<String> t = json.keys();
+
+    /**
+     * Beschikbare velden:
+     * image
+     gender
+     kind
+     displayName
+     verified
+     url
+     objectType
+     isPlusUser
+     emails
+     urls
+     name
+     etag
+     id
+     circledByCount
+     */
 %>
 <html>
 <head>
