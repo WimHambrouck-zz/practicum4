@@ -7,7 +7,6 @@
   <packaging>pom</packaging>
   <name>practicum4</name>
   <modules>
-    <module>practicum4-ear</module>
     <module>practicum4-web</module>
   </modules>
 </project>
