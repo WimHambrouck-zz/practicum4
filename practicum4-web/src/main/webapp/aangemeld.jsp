@@ -40,11 +40,9 @@
 <body>
 <h1>Welkom <%=json.getString("displayName")%></h1>
 <img src="<%=imgURL%>"/>
+<p>Ziehier wat informatie over jezelf:</p>
 
-
-
-<!-- Alle elementen opsommen
-
+<!-- Alle elementen opsommen -->
 <%
 
     while(t.hasNext()) {
@@ -54,6 +52,5 @@
 <%
     }
 %>
--->
         </body>
 </html>
